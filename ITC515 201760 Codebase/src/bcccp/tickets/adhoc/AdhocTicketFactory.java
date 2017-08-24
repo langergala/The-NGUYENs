@@ -1,11 +1,16 @@
 package bcccp.tickets.adhoc;
 
+
+
+
 public class AdhocTicketFactory implements IAdhocTicketFactory {
 
 	@Override
 	public IAdhocTicket make(String carparkId, int ticketNo) {
-		// TODO Auto-generated method stub
-		return null;
+		// I had to add another overloaded method to the AdhocTicket class to make this work.
+            AdhocTicket newTicket = new AdhocTicket(carparkId,ticketNo);
+            
+            return newTicket;
 	}
 
 

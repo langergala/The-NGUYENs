@@ -11,6 +11,7 @@ public interface IAdhocTicket {
 	public boolean isCurrent();
 	
 	public void pay(long dateTime, float charge);
+        public void pay();
 	public long getPaidDateTime();
 	public boolean isPaid();
 	public float getCharge();
