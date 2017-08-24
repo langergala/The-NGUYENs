@@ -14,65 +14,68 @@ public class SeasonTicket implements ISeasonTicket {
 	private long startValidPeriod;
 	private long endValidPeriod;
 	
-	public SeasonTicket (String ticketId, 
-			             String carparkId, 
-			             long startValidPeriod,
-			             long endValidPeriod) {
-		//TDO Implement constructor
+	public SeasonTicket (String ticketId, String carparkId, long startValidPeriod, long endValidPeriod) {
+            this.ticketId = ticketId;
+            this.carparkId = carparkId;
+            this.startValidPeriod = startValidPeriod;
+            this.endValidPeriod = endValidPeriod;
+            this.currentUsage = new UsageRecord(ticketId, System.currentTimeMillis());
 	}
 
 	@Override
 	public String getId() {
-		// TODO Auto-generated method stub
-		return null;
+            return ticketId;
 	}
 
 	@Override
 	public String getCarparkId() {
-		// TODO Auto-generated method stub
-		return null;
+            return carparkId;
 	}
 
 	@Override
 	public long getStartValidPeriod() {
-		// TODO Auto-generated method stub
-		return 0;
+            return startValidPeriod;
 	}
 
 	@Override
 	public long getEndValidPeriod() {
-		// TODO Auto-generated method stub
-		return 0;
+            return endValidPeriod;
 	}
 
 	@Override
 	public boolean inUse() {
-		// TODO Auto-generated method stub
-		return false;
+            if (currentUsage.getStartTime() != 0 && currentUsage.getEndTime() == 0) {
+               return true; 
+            }
+            else {
+                return false;
+            }
 	}
 
 	@Override
 	public void recordUsage(IUsageRecord record) {
-		// TODO Auto-generated method stub
+            usages.add(record);
 		
 	}
 
 	@Override
 	public IUsageRecord getCurrentUsageRecord() {
-		// TODO Auto-generated method stub
-		return null;
+            for (IUsageRecord u : usages) {
+                if (this.ticketId.equals(u.getSeasonTicketId())) {
+                    return u;
+                }
+            }
+            return null;
 	}
 
 	@Override
 	public void endUsage(long dateTime) {
-		// TODO Auto-generated method stub
-		
+            currentUsage.finalise(dateTime);
 	}
 
 	@Override
 	public List<IUsageRecord> getUsageRecords() {
-		// TODO Auto-generated method stub
-		return null;
+            return usages;
 	}
 
 
