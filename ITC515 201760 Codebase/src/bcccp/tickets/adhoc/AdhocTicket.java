@@ -1,5 +1,9 @@
 package bcccp.tickets.adhoc;
 
+import bcccp.carpark.Carpark;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 public class AdhocTicket implements IAdhocTicket {
@@ -11,102 +15,151 @@ public class AdhocTicket implements IAdhocTicket {
 	private long exitDateTime;
 	private float charge;
 	private String barcode;
+        
+        private boolean isCurrent;
+        private boolean hasPaid;
+        
+        
 
 	
 	
 	public AdhocTicket(String carparkId, int ticketNo, String barcode) {
-		//TDO Implement constructor
+            this.carparkId = carparkId;
+            this.ticketNo = ticketNo;
+            this.entryDateTime = setEntryDateTime();
+            this.barcode = barcode;
+            this.isCurrent = true; 
+            this.hasPaid = false;
+            this.exitDateTime = 0L;
+            this.charge = 0;
+            
+            
+	}
+        
+        public AdhocTicket(String carparkId, int ticketNo) {
+            this.carparkId = carparkId;
+            this.ticketNo = ticketNo;
+            this.entryDateTime = setEntryDateTime();
+            this.barcode = getEntryDateTime()+ticketNo+"A";
+            this.isCurrent = false; 
+            this.hasPaid = false;
+            this.exitDateTime = 0L;
+	    this.charge = 0;	
+            
 	}
 
 
 	@Override
 	public int getTicketNo() {
-		// TODO Auto-generated method stub
-		return 0;
+            return this.ticketNo;
 	}
 
 
 	@Override
 	public String getBarcode() {
-		// TODO Auto-generated method stub
-		return null;
+            return this.barcode;
 	}
 
 
 	@Override
 	public String getCarparkId() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.carparkId;
 	}
 
 
 	@Override
 	public void enter(long dateTime) {
-		// TODO Auto-generated method stub
+		this.entryDateTime = dateTime;
+                this.isCurrent = true;
 		
 	}
 
 
 	@Override
 	public long getEntryDateTime() {
-		// TODO Auto-generated method stub
-		return 0;
+            
+            return this.entryDateTime;
 	}
+        
+        private long setEntryDateTime(){
+            //Calendar cal = Calendar.getInstance();
+            //SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmmss");
+            //entryDateTime = Long.parseLong(sdf.format(cal.getTime()));
+            //return entryDateTime;
+            
+            return this.entryDateTime = System.currentTimeMillis();
+        }
 
 
 	@Override
 	public boolean isCurrent() {
-		// TODO Auto-generated method stub
-		return false;
+            return this.isCurrent;
 	}
 
 
 	@Override
 	public void pay(long dateTime, float charge) {
 		// TODO Auto-generated method stub
+                this.paidDateTime = dateTime;
+                this.charge = charge;
+                this.hasPaid = true;
 		
+	}
+        @Override
+        public void pay() {
+		this.hasPaid = true;		
 	}
 
 
 	@Override
 	public long getPaidDateTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.paidDateTime;
 	}
 
 
 	@Override
 	public boolean isPaid() {
-		// TODO Auto-generated method stub
-		return false;
+                return this.hasPaid;
+                
 	}
 
 
 	@Override
 	public float getCharge() {
-		// TODO Auto-generated method stub
-		return 0;
+            float shortStayCharge = 5;
+                float longStayCharge = 5000;
+                if(System.currentTimeMillis()- entryDateTime < 1000){
+                    System.out.println(System.currentTimeMillis() + " - " + entryDateTime+" = " + (System.currentTimeMillis() - entryDateTime));
+                    System.out.println("charged custmer LONG stay amount");
+                    return longStayCharge;
+                }
+                else{
+                    System.out.println(System.currentTimeMillis() + " - " + entryDateTime+" = " + (System.currentTimeMillis() - entryDateTime));
+                    System.out.println("charged custmer SHORT stay amount");
+                    return shortStayCharge;
+                }
+            
 	}
 
 
 	@Override
 	public void exit(long dateTime) {
-		// TODO Auto-generated method stub
+		this.isCurrent = false;
+                this.exitDateTime = dateTime;
+               
 		
 	}
 
 
 	@Override
 	public long getExitDateTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.exitDateTime;
 	}
 
 
 	@Override
 	public boolean hasExited() {
-		// TODO Auto-generated method stub
-		return false;
+		return !this.isCurrent();
 	}
 
 	
