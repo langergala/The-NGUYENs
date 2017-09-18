@@ -2,65 +2,76 @@ package bcccp.tickets.season;
 
 import bcccp.tickets.season.ISeasonTicket;
 import bcccp.tickets.season.IUsageRecordFactory;
+import java.util.ArrayList;
 
 public class SeasonTicketDAO implements ISeasonTicketDAO {
 
 	private IUsageRecordFactory factory;
-
-	
+  private ISeasonTicket seasonTicket;
+	private ArrayList<ISeasonTicket> registeredTicketsList = new ArrayList <ISeasonTicket>();
 	
 	public SeasonTicketDAO(IUsageRecordFactory factory) {
-		//TOD Implement constructor
+            this.factory = factory;
 	}
 
 
 
 	@Override
 	public void registerTicket(ISeasonTicket ticket) {
-		// TODO Auto-generated method stub
-		
+
+            registeredTicketsList.add(ticket);
+
 	}
 
 
 
 	@Override
 	public void deregisterTicket(ISeasonTicket ticket) {
-		// TODO Auto-generated method stub
-		
+            for (ISeasonTicket st : registeredTicketsList) {
+                if (st.getId().equals(ticket.getId())) {
+                    registeredTicketsList.remove(registeredTicketsList.indexOf(st));
+                }
+            }
 	}
 
 
 
 	@Override
 	public int getNumberOfTickets() {
-		// TODO Auto-generated method stub
-		return 0;
+            
+		return registeredTicketsList.size();
 	}
 
 
 
 	@Override
 	public ISeasonTicket findTicketById(String ticketId) {
-		// TODO Auto-generated method stub
-		return null;
+            for (ISeasonTicket st : registeredTicketsList) {
+                if (st.getId().equals(ticketId)) {
+                    return st;
+                }
+            }
+            return null;
 	}
 
 
 
 	@Override
 	public void recordTicketEntry(String ticketId) {
-		// TODO Auto-generated method stub
-		
-	}
+
+            factory.make(ticketId, System.currentTimeMillis());
+  }	
+
 
 
 
 	@Override
 	public void recordTicketExit(String ticketId) {
-		// TODO Auto-generated method stub
-		
+
+            seasonTicket = findTicketById(ticketId);
+            seasonTicket.endUsage(System.currentTimeMillis());
+            registeredTicketsList.remove(findTicketById(ticketId));
+
 	}
-	
-	
-	
+        
 }

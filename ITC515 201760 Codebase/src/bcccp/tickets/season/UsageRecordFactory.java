@@ -5,8 +5,10 @@ public class UsageRecordFactory implements IUsageRecordFactory {
 	@Override
 	public IUsageRecord make(String ticketId, long startDateTime) {
 		// TODO Auto-generated method stub
-		return null;
+                UsageRecord ur = new UsageRecord(ticketId, startDateTime);
+		return ur;
 	}
 
 
 }
+
